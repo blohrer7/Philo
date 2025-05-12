@@ -1,9 +1,13 @@
 NAME = philo
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./include -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -I./include
 
-SRC = main.c \
+SRC =	src/main.c \
+		src/init.c \
+		src/utils.c \
+		src/philos.c \
+		src/monitor.c \
 
 
 OBJ = $(SRC:.c=.o)
@@ -11,7 +15,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lpthread
 
 clean:
 	rm -f $(OBJ)
