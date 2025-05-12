@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:58:39 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/09 10:25:01 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/12 20:29:10 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 int	check_input(int argc, char *argv[])
 {
 	if (argc < 5 || argc > 6)
-		return (write(2, "Error: Wrong size of arguments\n", 33), - 1);
+		return (write(2, "Error: Wrong size of arguments\n", 33), -1);
 	if (ft_atoi(argv[1]) < 0 || ft_atoi(argv[1]) > 200)
-		return (write(2, "Error: No philo or over 200 philos.\n", 38), - 1);
+		return (write(2, "Error: No philo or over 200 philos.\n", 38), -1);
 	if (ft_atoi(argv[2]) < 0)
-		return (write(2, "Error: Wrong time to eat.\n", 28), - 1);
+		return (write(2, "Error: Wrong time to eat.\n", 28), -1);
 	if (ft_atoi(argv[3]) < 0)
-		return (write(2, "Error: Wrong time to sleep.\n", 30), - 1);
+		return (write(2, "Error: Wrong time to sleep.\n", 30), -1);
 	if (ft_atoi(argv[4]) < 0)
-		return (write(2, "Error: Wrong time to die.\n", 28), - 1);
+		return (write(2, "Error: Wrong time to die.\n", 28), -1);
 	if (argc == 6 && ft_atoi(argv[5]) < 0)
-		return (write(2, "Error: Wrong number of meals.\n", 32), - 1);
+		return (write(2, "Error: Wrong number of meals.\n", 32), -1);
 	return (0);
 }
 
@@ -47,7 +47,8 @@ int	init_mutexes(t_data *data)
 
 int	init_data(t_data *data, int argc, char *argv[])
 {
-	data->someone_died = 0;
+	data->simulation_active = 1;
+	pthread_mutex_init(&data->sim_lock, NULL);
 	data->nb_philo = ft_atoi(argv[1]);
 	data->time_to_eat = ft_atoi(argv[2]);
 	data->time_to_sleep = ft_atoi(argv[3]);
@@ -66,12 +67,12 @@ int	init_data(t_data *data, int argc, char *argv[])
 
 long	get_time_in_ms(void)
 {
-	struct timeval	current_time;
+	struct timespec	ts;
 
-	if (gettimeofday(&current_time, NULL) == -1)
+	if (clock_gettime(CLOCK_MONOTONIC, &ts) == -1)
 	{
-		write(2, "gettimeofday failed", 20);
+		write(2, "clock_gettime failed", 20);
 		return (-1);
 	}
-	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
+	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }

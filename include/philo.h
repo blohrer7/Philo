@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:37:45 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/09 10:35:08 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/12 20:50:38 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,20 @@ typedef struct s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	long			start_time;
-	int				someone_died;
+
 	int				must_eat;
 	int				philos_finished;
+
+	int				simulation_active;
+	pthread_mutex_t	sim_lock;
+
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
 
 	t_philo			*philos;
 }					t_data;
+
 
 int	ft_atoi(const char *str);
 long	get_time_in_ms(void);
@@ -68,6 +73,9 @@ int eat(t_philo *philo);
 void	*monitor(void *arg);
 void	cleanup(t_data *data);
 void	ft_usleep(long ms);
+int	is_simulation_active(t_data *data);
+int	check_meal_completion(t_data *data);
+int	simulation_stopped(t_data *data);
 
 
 
