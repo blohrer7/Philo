@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:58:39 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/12 20:29:10 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/13 17:56:09 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,6 @@ int	check_input(int argc, char *argv[])
 	return (0);
 }
 
-int	init_mutexes(t_data *data)
-{
-	if (pthread_mutex_init(&data->print_lock, NULL) != 0)
-	{
-		free(data->forks);
-		return (write(2, "Error: Failed to initialize print_lock\n", 40), -1);
-	}
-	if (pthread_mutex_init(&data->death_lock, NULL) != 0)
-	{
-		free(data->forks);
-		pthread_mutex_destroy(&data->print_lock);
-		return (write(2, "Error: Failed to initialize death_lock\n", 40), -1);
-	}
-	return (0);
-}
-
 int	init_data(t_data *data, int argc, char *argv[])
 {
 	data->simulation_active = 1;
@@ -57,22 +41,73 @@ int	init_data(t_data *data, int argc, char *argv[])
 		data->must_eat = ft_atoi(argv[5]);
 	else
 		data->must_eat = -1;
-	if ((data->start_time = get_time_in_ms()) == -1)
+	data->start_time = get_time_in_ms();
+	if (data->start_time == -1)
+	{
 		return (write(2, "Error: Failed to get start time\n", 33), -1);
+	}
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
 	if (data->forks == NULL)
 		return (write(2, "Error: Failed allocate memory for forks\n", 41), -1);
 	return (init_mutexes(data));
 }
 
-long	get_time_in_ms(void)
+int	init_global_mutexes(t_data *data)
 {
-	struct timespec	ts;
+	int	i;
 
-	if (clock_gettime(CLOCK_MONOTONIC, &ts) == -1)
-	{
-		write(2, "clock_gettime failed", 20);
+	if (init_print_and_death_mutexes(data) != 0)
 		return (-1);
+	if (pthread_mutex_init(&data->sim_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&data->print_lock);
+		pthread_mutex_destroy(&data->death_lock);
+		i = 0;
+		while (i < data->nb_philo)
+			pthread_mutex_destroy(&data->forks[i++]);
+		free(data->forks);
+		return (write(2, "Error: Failed to initialize sim_lock\n", 38), -1);
 	}
-	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+	return (0);
+}
+
+int	init_print_and_death_mutexes(t_data *data)
+{
+	int	i;
+
+	if (pthread_mutex_init(&data->print_lock, NULL) != 0)
+	{
+		free(data->forks);
+		return (write(2, "Error: Failed to initialize print_lock\n", 40), -1);
+	}
+	if (pthread_mutex_init(&data->death_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&data->print_lock);
+		i = 0;
+		while (i < data->nb_philo)
+			pthread_mutex_destroy(&data->forks[i++]);
+		free(data->forks);
+		return (write(2, "Error: Failed to initialize death_lock\n", 40), -1);
+	}
+	return (0);
+}
+
+int	init_fork_mutexes(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+		{
+			write(2, "Error: Failed to init fork mutex\n", 33);
+			while (--i >= 0)
+				pthread_mutex_destroy(&data->forks[i]);
+			free(data->forks);
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
 }

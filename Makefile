@@ -8,6 +8,7 @@ SRC =	src/main.c \
 		src/utils.c \
 		src/philos.c \
 		src/monitor.c \
+		src/eat_forks.c \
 
 
 OBJ = $(SRC:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:21:03 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/12 20:47:58 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/13 17:50:56 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,33 +61,6 @@ int	simulation_should_stop(t_philo *philo)
 	return (!is_simulation_active(philo->data));
 }
 
-
-void	cleanup(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while(i < data->nb_philo)
-	{
-		pthread_mutex_destroy(&data->forks[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&data->print_lock);
-	pthread_mutex_destroy(&data->death_lock);
-	pthread_mutex_destroy(&data->sim_lock);
-	free(data->forks);
-	free(data->philos);
-}
-
-void	ft_usleep(long ms)
-{
-	long	start;
-
-	start = get_time_in_ms();
-	while (get_time_in_ms() - start < ms)
-		usleep(500);
-}
-
 int	simulation_stopped(t_data *data)
 {
 	int	active;
@@ -96,4 +69,16 @@ int	simulation_stopped(t_data *data)
 	active = data->simulation_active;
 	pthread_mutex_unlock(&data->sim_lock);
 	return (active == 0);
+}
+
+long	get_time_in_ms(void)
+{
+	struct timespec	ts;
+
+	if (clock_gettime(CLOCK_MONOTONIC, &ts) == -1)
+	{
+		write(2, "clock_gettime failed", 20);
+		return (-1);
+	}
+	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }
