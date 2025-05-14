@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:58:39 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:56:09 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/14 10:38:45 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 int	check_input(int argc, char *argv[])
 {
 	if (argc < 5 || argc > 6)
-		return (write(2, "Error: Wrong size of arguments\n", 33), -1);
+		return (write(2, "Error: Wrong size of arguments\n", 32), -1);
 	if (ft_atoi(argv[1]) < 0 || ft_atoi(argv[1]) > 200)
-		return (write(2, "Error: No philo or over 200 philos.\n", 38), -1);
+		return (write(2, "Error: No philo or over 200 philos.\n", 37), -1);
 	if (ft_atoi(argv[2]) < 0)
-		return (write(2, "Error: Wrong time to eat.\n", 28), -1);
+		return (write(2, "Error: Wrong time to eat.\n", 27), -1);
 	if (ft_atoi(argv[3]) < 0)
-		return (write(2, "Error: Wrong time to sleep.\n", 30), -1);
+		return (write(2, "Error: Wrong time to sleep.\n", 29), -1);
 	if (ft_atoi(argv[4]) < 0)
-		return (write(2, "Error: Wrong time to die.\n", 28), -1);
+		return (write(2, "Error: Wrong time to die.\n", 27), -1);
 	if (argc == 6 && ft_atoi(argv[5]) < 0)
-		return (write(2, "Error: Wrong number of meals.\n", 32), -1);
+		return (write(2, "Error: Wrong number of meals.\n", 31), -1);
 	return (0);
 }
 
