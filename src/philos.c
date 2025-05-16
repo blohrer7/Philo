@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:47:59 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:56:34 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:26:16 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ int	handle_one_philosopher(t_data *data)
 	pthread_mutex_lock(&data->print_lock);
 	printf("0 1 is thinking\n");
 	pthread_mutex_unlock(&data->print_lock);
-	ft_usleep(100);
+	ft_usleep(100, data);
 	pthread_mutex_lock(&data->print_lock);
 	printf("100 1 has taken a fork\n");
 	pthread_mutex_unlock(&data->print_lock);
-	ft_usleep(data->time_to_die - 100);
+	ft_usleep(data->time_to_die - 100, data);
 	pthread_mutex_lock(&data->print_lock);
 	printf("%ld 1 died\n", get_time_in_ms() - data->start_time);
 	pthread_mutex_unlock(&data->print_lock);
@@ -86,11 +86,9 @@ int	start_all_philosopher_threads(t_data *data)
 
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
+	t_philo	*philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep(philo->data->time_to_eat * 1000);
+		ft_usleep(philo->data->time_to_eat, philo->data);
 	while (!simulation_should_stop(philo))
 	{
 		take_forks(philo);
@@ -98,17 +96,13 @@ void	*philo_routine(void *arg)
 			break ;
 		if (simulation_should_stop(philo))
 			break ;
-		pthread_mutex_lock(&philo->data->print_lock);
-		printf("%ld %d is sleeping\n", get_time_in_ms()
-			- philo->data->start_time, philo->id);
-		pthread_mutex_unlock(&philo->data->print_lock);
-		usleep(philo->data->time_to_sleep * 1000);
+		print_status(philo, "is sleeping", get_time_in_ms());
+		ft_usleep(philo->data->time_to_sleep, philo->data);
 		if (simulation_should_stop(philo))
 			break ;
-		pthread_mutex_lock(&philo->data->print_lock);
-		printf("%ld %d is thinking\n", get_time_in_ms()
-			- philo->data->start_time, philo->id);
-		pthread_mutex_unlock(&philo->data->print_lock);
+		print_status(philo, "is thinking", get_time_in_ms());
+		ft_usleep(150, philo->data); // oder dynamisch
 	}
 	return (NULL);
 }
+

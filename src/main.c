@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:57:49 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:56:14 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:18:23 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,15 @@ void	cleanup(t_data *data)
 	free(data->philos);
 }
 
-void	ft_usleep(long ms)
+void	ft_usleep(long ms, t_data *data)
 {
-	long	start;
-
-	start = get_time_in_ms();
-	while (get_time_in_ms() - start < ms)
-		usleep(500);
+	long start = get_time_in_ms();
+    while (is_simulation_active(data))
+    {
+        if (get_time_in_ms() - start >= ms)
+            break;
+        usleep(500); // Kurze Pause, damit du Stop-Flags checken kannst
+    }
 }
 
 int	init_mutexes(t_data *data)

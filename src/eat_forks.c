@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 17:47:14 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:49:11 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:23:40 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	eat(t_philo *philo)
 	start = get_time_in_ms();
 	update_meal_status_and_unlock(philo, start);
 	print_status(philo, "is eating", start);
-	ft_usleep(philo->data->time_to_eat);
+	ft_usleep(philo->data->time_to_eat, philo->data);
 	if (philo->data->must_eat > 0
 		&& philo->meals_eaten >= philo->data->must_eat)
 		return (1);

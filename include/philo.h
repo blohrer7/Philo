@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:37:45 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:52:26 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/16 10:18:33 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void				take_forks(t_philo *philo);
 int					eat(t_philo *philo);
 void				*monitor(void *arg);
 void				cleanup(t_data *data);
-void				ft_usleep(long ms);
+void	ft_usleep(long ms, t_data *data);
 int					is_simulation_active(t_data *data);
 int					check_meal_completion(t_data *data);
 int					simulation_stopped(t_data *data);
