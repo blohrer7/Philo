@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 07:58:39 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/14 10:38:45 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:27:36 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	init_data(t_data *data, int argc, char *argv[])
 	data->simulation_active = 1;
 	pthread_mutex_init(&data->sim_lock, NULL);
 	data->nb_philo = ft_atoi(argv[1]);
-	data->time_to_eat = ft_atoi(argv[2]);
-	data->time_to_sleep = ft_atoi(argv[3]);
-	data->time_to_die = ft_atoi(argv[4]);
+	data->time_to_die = ft_atoi(argv[2]);
+	data->time_to_eat = ft_atoi(argv[3]);
+	data->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		data->must_eat = ft_atoi(argv[5]);
 	else

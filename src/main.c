@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:57:49 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/16 10:18:23 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:52:48 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,51 @@
 
 int	main(int argc, char **argv)
 {
-	t_data	data;
+	t_data		data;
+	pthread_t	monitor_thread;
+	int			i;
 
 	if (check_input(argc, argv) != 0)
 		return (1);
 	if (init_data(&data, argc, argv) != 0)
 		return (1);
-	data.philos = malloc(sizeof(t_philo) * data.nb_philo);
-	if (!data.philos)
-		return (write(2, "Error: Failed to allocate philosophers\n", 39), 1);
 	if (init_philosophers(&data) != 0)
+		return (write(2, "Error: Philosopher init failed\n", 31), 1);
+	create_philosopher_threads(&data);
+	pthread_create(&monitor_thread, NULL, monitor, &data);
+	i = 0;
+	while (i < data.nb_philo)
 	{
-		free(data.philos);
-		return (1);
+		pthread_join(data.philos[i++].thread, NULL);
+		i++;
 	}
-	if (start_philosophers(&data) != 0)
-	{
-		cleanup(&data);
-		return (1);
-	}
+	pthread_join(monitor_thread, NULL);
 	cleanup(&data);
 	return (0);
+}
+
+void	create_philosopher_threads(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_create(&data->philos[i].thread, NULL, philo_routine,
+			&data->philos[i]);
+		i++;
+	}
+}
+
+void	philo_sleep(t_philo *philo)
+{
+	print_status(philo, "is sleeping");
+	ft_usleep(philo->data->time_to_sleep, philo->data);
+}
+
+void	philo_think(t_philo *philo)
+{
+	print_status(philo, "is thinking");
 }
 
 void	cleanup(t_data *data)
@@ -52,24 +76,4 @@ void	cleanup(t_data *data)
 	pthread_mutex_destroy(&data->sim_lock);
 	free(data->forks);
 	free(data->philos);
-}
-
-void	ft_usleep(long ms, t_data *data)
-{
-	long start = get_time_in_ms();
-    while (is_simulation_active(data))
-    {
-        if (get_time_in_ms() - start >= ms)
-            break;
-        usleep(500); // Kurze Pause, damit du Stop-Flags checken kannst
-    }
-}
-
-int	init_mutexes(t_data *data)
-{
-	if (init_fork_mutexes(data) != 0)
-		return (-1);
-	if (init_global_mutexes(data) != 0)
-		return (-1);
-	return (0);
 }

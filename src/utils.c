@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 10:21:03 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/13 17:50:56 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:26:58 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,6 @@ int	simulation_should_stop(t_philo *philo)
 	return (!is_simulation_active(philo->data));
 }
 
-int	simulation_stopped(t_data *data)
-{
-	int	active;
-
-	pthread_mutex_lock(&data->sim_lock);
-	active = data->simulation_active;
-	pthread_mutex_unlock(&data->sim_lock);
-	return (active == 0);
-}
-
 long	get_time_in_ms(void)
 {
 	struct timespec	ts;
@@ -81,4 +71,17 @@ long	get_time_in_ms(void)
 		return (-1);
 	}
 	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+}
+
+void	ft_usleep(long ms, t_data *data)
+{
+	long	start;
+
+	start = get_time_in_ms();
+	while (is_simulation_active(data))
+	{
+		if (get_time_in_ms() - start >= ms)
+			break ;
+		usleep(500);
+	}
 }

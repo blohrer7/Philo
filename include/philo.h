@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:37:45 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/16 10:18:33 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:52:00 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,29 +63,22 @@ int					init_data(t_data *data, int argc, char *argv[]);
 int					init_mutexes(t_data *data);
 int					check_input(int argc, char *argv[]);
 int					init_philosophers(t_data *data);
-int					start_philosophers(t_data *data);
 void				*philo_routine(void *arg);
 int					simulation_should_stop(t_philo *philo);
 void				take_forks(t_philo *philo);
-int					eat(t_philo *philo);
+void				eat(t_philo *philo);
 void				*monitor(void *arg);
 void				cleanup(t_data *data);
-void	ft_usleep(long ms, t_data *data);
+void				ft_usleep(long ms, t_data *data);
 int					is_simulation_active(t_data *data);
-int					check_meal_completion(t_data *data);
-int					simulation_stopped(t_data *data);
-
 int					init_global_mutexes(t_data *data);
 int					init_print_and_death_mutexes(t_data *data);
 int					init_fork_mutexes(t_data *data);
-int					check_philo_death(t_data *data, int i);
-int					check_end_condition(t_data *data);
 int					handle_one_philosopher(t_data *data);
-int					start_all_philosopher_threads(t_data *data);
-void				lock_and_print(t_philo *philo, pthread_mutex_t *fork,
-						char *side);
-void				print_status(t_philo *philo, char *msg, long timestamp);
-void				update_meal_status_and_unlock(t_philo *philo,
-						long timestamp);
+void				print_status(t_philo *philo, char *msg);
+void				philo_think(t_philo *philo);
+void				philo_sleep(t_philo *philo);
+int					monitor_check_death_or_full(t_data *data, int *full, int i);
+void				create_philosopher_threads(t_data *data);
 
 #endif

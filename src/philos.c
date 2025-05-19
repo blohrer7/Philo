@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:47:59 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/16 10:26:16 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:44:18 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,25 @@
 
 int	init_philosophers(t_data *data)
 {
-	int	i;
+	int		i;
+	long	start;
 
-	if (data->philos == NULL)
-		return (-1);
-	data->start_time = get_time_in_ms();
 	i = 0;
+	data->philos = malloc(sizeof(t_philo) * data->nb_philo);
+	if (!data->philos)
+		return (write(2, "Error: malloc philos\n", 20), -1);
+	start = get_time_in_ms();
 	while (i < data->nb_philo)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].left_fork = &data->forks[i];
 		data->philos[i].right_fork = &data->forks[(i + 1) % data->nb_philo];
-		data->philos[i].last_meal_time = data->start_time;
+		data->philos[i].last_meal_time = start;
 		data->philos[i].meals_eaten = 0;
 		data->philos[i].data = data;
 		i++;
 	}
 	return (0);
-}
-
-int	start_philosophers(t_data *data)
-{
-	if (!data || !data->nb_philo)
-		return (-1);
-	data->start_time = get_time_in_ms();
-	if (data->nb_philo == 1)
-		return (handle_one_philosopher(data));
-	return (start_all_philosopher_threads(data));
 }
 
 int	handle_one_philosopher(t_data *data)
@@ -60,49 +52,40 @@ int	handle_one_philosopher(t_data *data)
 	return (0);
 }
 
-int	start_all_philosopher_threads(t_data *data)
-{
-	int			i;
-	pthread_t	monitor_thread;
-
-	i = 0;
-	while (i < data->nb_philo)
-	{
-		data->philos[i].last_meal_time = data->start_time;
-		if (pthread_create(&data->philos[i].thread, NULL,
-				philo_routine, &data->philos[i]) != 0)
-			return (write(2, "Error: Failed to create thread.\n", 33), 1);
-		usleep(100);
-		i++;
-	}
-	if (pthread_create(&monitor_thread, NULL, monitor, data) != 0)
-		return (write(2, "Error: Failed to create monitor thread.\n", 41), 1);
-	pthread_join(monitor_thread, NULL);
-	i = 0;
-	while (i < data->nb_philo)
-		pthread_join(data->philos[i++].thread, NULL);
-	return (0);
-}
-
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo = (t_philo *)arg;
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->time_to_eat, philo->data);
+	{
+		philo_think(philo);
+		ft_usleep(philo->data->time_to_eat / 2, philo->data);
+	}
 	while (!simulation_should_stop(philo))
 	{
-		take_forks(philo);
-		if (eat(philo) != 0)
+		if (philo->data->must_eat > 0
+			&& philo->meals_eaten >= philo->data->must_eat)
+			break ;
+		eat(philo);
+		if (philo->data->must_eat > 0
+			&& philo->meals_eaten >= philo->data->must_eat)
 			break ;
 		if (simulation_should_stop(philo))
 			break ;
-		print_status(philo, "is sleeping", get_time_in_ms());
-		ft_usleep(philo->data->time_to_sleep, philo->data);
+		philo_sleep(philo);
 		if (simulation_should_stop(philo))
 			break ;
-		print_status(philo, "is thinking", get_time_in_ms());
-		ft_usleep(150, philo->data); // oder dynamisch
+		philo_think(philo);
 	}
 	return (NULL);
 }
 
+int	init_mutexes(t_data *data)
+{
+	if (init_fork_mutexes(data) != 0)
+		return (-1);
+	if (init_global_mutexes(data) != 0)
+		return (-1);
+	return (0);
+}
