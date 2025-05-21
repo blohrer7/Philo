@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:37:45 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/19 16:52:00 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/21 11:17:40 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,8 @@ void				philo_think(t_philo *philo);
 void				philo_sleep(t_philo *philo);
 int					monitor_check_death_or_full(t_data *data, int *full, int i);
 void				create_philosopher_threads(t_data *data);
+void				philo_life_loop(t_philo *philo);
+void				do_eating(t_philo *philo);
+int					is_valid_number(char *str);
 
 #endif

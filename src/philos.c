@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:47:59 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/19 16:44:18 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/21 11:18:03 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,18 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	usleep((philo->id % 10) * 200);
 	if (philo->id % 2 == 0)
 	{
 		philo_think(philo);
 		ft_usleep(philo->data->time_to_eat / 2, philo->data);
 	}
+	philo_life_loop(philo);
+	return (NULL);
+}
+
+void	philo_life_loop(t_philo *philo)
+{
 	while (!simulation_should_stop(philo))
 	{
 		if (philo->data->must_eat > 0
@@ -78,7 +85,6 @@ void	*philo_routine(void *arg)
 			break ;
 		philo_think(philo);
 	}
-	return (NULL);
 }
 
 int	init_mutexes(t_data *data)
