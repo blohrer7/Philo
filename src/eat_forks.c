@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 17:47:14 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/21 11:17:22 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/21 13:22:19 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ void	print_status(t_philo *philo, char *msg)
 {
 	long	timestamp;
 
-	timestamp = get_time_in_ms() - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->print_lock);
-	printf("%ld %d %s\n", timestamp, philo->id, msg);
+	if (!simulation_should_stop(philo))
+	{
+		timestamp = get_time_in_ms() - philo->data->start_time;
+		printf("%ld %d %s\n", timestamp, philo->id, msg);
+	}
 	pthread_mutex_unlock(&philo->data->print_lock);
 }
