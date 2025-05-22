@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:57:49 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/19 16:52:48 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/22 17:45:47 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < data.nb_philo)
 	{
-		pthread_join(data.philos[i++].thread, NULL);
+		pthread_join(data.philos[i].thread, NULL);
 		i++;
 	}
 	pthread_join(monitor_thread, NULL);
