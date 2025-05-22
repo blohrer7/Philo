@@ -6,29 +6,11 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 17:47:14 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/21 13:22:19 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/22 08:46:37 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	take_forks(t_philo *philo)
-{
-	if (philo->id % 2 == 1)
-	{
-		pthread_mutex_lock(philo->right_fork);
-		print_status(philo, "has taken a fork");
-		pthread_mutex_lock(philo->left_fork);
-		print_status(philo, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(philo->left_fork);
-		print_status(philo, "has taken a fork");
-		pthread_mutex_lock(philo->right_fork);
-		print_status(philo, "has taken a fork");
-	}
-}
 
 void	eat(t_philo *philo)
 {
