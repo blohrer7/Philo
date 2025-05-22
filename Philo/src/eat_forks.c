@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 17:47:14 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/22 08:46:37 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/22 16:50:31 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	do_eating(t_philo *philo)
 	ft_usleep(philo->data->time_to_eat, philo->data);
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
+	print_status(philo, "is sleeping");
 }
 
 void	print_status(t_philo *philo, char *msg)

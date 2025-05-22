@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:47:59 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/21 11:18:03 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/05/22 17:43:58 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	usleep((philo->id % 10) * 200);
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 0 || philo->id == philo->data->nb_philo)
 	{
 		philo_think(philo);
 		ft_usleep(philo->data->time_to_eat / 2, philo->data);
