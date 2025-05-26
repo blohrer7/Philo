@@ -14,7 +14,6 @@ SRC =	src/main.c \
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
-		@echo "\n\033[1;33m Use for example: ./philo 5 800 200 200 7 \033[0m\n"
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lpthread
