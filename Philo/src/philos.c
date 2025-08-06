@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:47:59 by blohrer           #+#    #+#             */
-/*   Updated: 2025/05/22 17:43:58 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/08/05 16:54:30 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@ int	init_philosophers(t_data *data)
 	return (0);
 }
 
+// int	handle_one_philosopher(t_data *data)
+// {
+// 	data->start_time = get_time_in_ms();
+// 	pthread_mutex_lock(&data->print_lock);
+// 	printf("0 1 is thinking\n");
+// 	pthread_mutex_unlock(&data->print_lock);
+// 	ft_usleep(100, data);
+// 	pthread_mutex_lock(&data->print_lock);
+// 	printf("100 1 has taken a fork\n");
+// 	pthread_mutex_unlock(&data->print_lock);
+// 	ft_usleep(data->time_to_die - 100, data);
+// 	pthread_mutex_lock(&data->print_lock);
+// 	printf("%ld 1 died\n", get_time_in_ms() - data->start_time);
+// 	pthread_mutex_unlock(&data->print_lock);
+// 	return (0);
+// }
 int	handle_one_philosopher(t_data *data)
 {
 	data->start_time = get_time_in_ms();
@@ -49,6 +65,9 @@ int	handle_one_philosopher(t_data *data)
 	pthread_mutex_lock(&data->print_lock);
 	printf("%ld 1 died\n", get_time_in_ms() - data->start_time);
 	pthread_mutex_unlock(&data->print_lock);
+	pthread_mutex_lock(&data->sim_lock);
+	data->simulation_active = 0;
+	pthread_mutex_unlock(&data->sim_lock);
 	return (0);
 }
 
