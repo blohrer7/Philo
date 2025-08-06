@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:37:45 by blohrer           #+#    #+#             */
-/*   Updated: 2025/08/05 17:42:17 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/08/06 10:14:37 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ void				philo_sleep(t_philo *philo);
 int					monitor_check_death_or_full(t_data *data, int *full, int i);
 void				create_philosopher_threads(t_data *data);
 void				philo_life_loop(t_philo *philo);
-// void				do_eating(t_philo *philo);
 int					is_valid_number(char *str);
-void	do_eating(t_philo *philo, pthread_mutex_t *first, pthread_mutex_t *second);
-void	precise_usleep(long ms);
-
+void				do_eating(t_philo *philo, pthread_mutex_t *first,
+						pthread_mutex_t *second);
+void				take_forks_and_eat(t_philo *philo, pthread_mutex_t *first,
+						pthread_mutex_t *second);
 
 #endif

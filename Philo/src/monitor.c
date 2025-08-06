@@ -6,7 +6,7 @@
 /*   By: blohrer <blohrer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:52:08 by blohrer           #+#    #+#             */
-/*   Updated: 2025/08/05 17:05:59 by blohrer          ###   ########.fr       */
+/*   Updated: 2025/08/06 10:15:04 by blohrer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,6 @@ void	*monitor(void *arg)
 	return (NULL);
 }
 
-// int	monitor_check_death_or_full(t_data *data, int *full, int i)
-// {
-// 	long	now;
-
-// 	pthread_mutex_lock(&data->death_lock);
-// 	now = get_time_in_ms();
-// 	if ((now - data->philos[i].last_meal_time) > data->time_to_die)
-// 	{
-// 		pthread_mutex_lock(&data->print_lock);
-// 		data->simulation_active = 0;
-// 		printf("%ld %d died\n", now - data->start_time, data->philos[i].id);
-// 		pthread_mutex_unlock(&data->print_lock);
-// 		pthread_mutex_unlock(&data->death_lock);
-// 		return (1);
-// 	}
-// 	if (data->must_eat > 0 && data->philos[i].meals_eaten >= data->must_eat)
-// 		(*full)++;
-// 	pthread_mutex_unlock(&data->death_lock);
-// 	return (0);
-// }
 int	monitor_check_death_or_full(t_data *data, int *full, int i)
 {
 	long	now;
@@ -70,17 +50,12 @@ int	monitor_check_death_or_full(t_data *data, int *full, int i)
 	if ((now - data->philos[i].last_meal_time) > data->time_to_die)
 	{
 		pthread_mutex_unlock(&data->death_lock);
-
-		// ----> JETZT simulation_active setzen, aber NUR mit sim_lock!
 		pthread_mutex_lock(&data->sim_lock);
 		data->simulation_active = 0;
 		pthread_mutex_unlock(&data->sim_lock);
-
-		// Jetzt printen
 		pthread_mutex_lock(&data->print_lock);
 		printf("%ld %d died\n", now - data->start_time, data->philos[i].id);
 		pthread_mutex_unlock(&data->print_lock);
-
 		return (1);
 	}
 	if (data->must_eat > 0 && data->philos[i].meals_eaten >= data->must_eat)
@@ -88,7 +63,6 @@ int	monitor_check_death_or_full(t_data *data, int *full, int i)
 	pthread_mutex_unlock(&data->death_lock);
 	return (0);
 }
-
 
 int	is_simulation_active(t_data *data)
 {
